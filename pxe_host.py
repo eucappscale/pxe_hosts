@@ -28,4 +28,4 @@ host = args.target
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 ssh.connect(str(host), username=user, password=password)
-ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("touch remote_test")
+ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("yum install -y koan python-ethtool; koan -r; reboot")
