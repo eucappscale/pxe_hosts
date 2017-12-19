@@ -29,5 +29,13 @@ for host in host_list:
     print "PXEing host " + host
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(str(host), username=user, password=password)
+    
+    try:
+      ssh.connect(str(host), username=user, password=password)
+    except: paramiko.BadHostKeyException, e:
+        raise BadHostKeyError(e.hostname, e.key, e.expected_key)
+    except paramiko.AuthenticationException, e:
+        raise AuthenticationError()
+    except paramiko.SSHException, e:
+        raise SCMError(unicode(e))    
     ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("yum install -y koan python-ethtool; koan -r; reboot")
